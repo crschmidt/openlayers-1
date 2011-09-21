@@ -93,7 +93,7 @@
     }
 
     function test_Tile_Image_draw (t) {
-        t.plan( 7 );
+        t.plan( 8 );
 
         var map = new OpenLayers.Map('map');
         
@@ -140,8 +140,9 @@
                  "http://labs.metacarta.com/TESTURL?" + OpenLayers.Util.getParameterString(tParams),
                  "tile.draw creates an image");
         });
-        t.eq( tile.imgDiv.style.width, "100%", "Image width is correct" );
-        t.eq( tile.imgDiv.style.height, "100%", "Image height is correct" );
+        t.eq( tile.imgDiv.style.width, "5px", "Image width is correct" );
+        t.eq( tile.imgDiv.style.height, "6px", "Image height is correct" );
+        t.ok( tile.imgDiv.parentNode === layer.div, "Image is directly appended to the layer div" );
 
         // this should trigger a "reload" event (since the image never actually
         // loads in tests)
@@ -310,9 +311,10 @@
         map.setCenter(new OpenLayers.LonLat(0,0), 5);
         var tile = layer.grid[0][0];
         var img = tile.imgDiv;
+        var left = img.style.left;
         var backBuffer = tile.createBackBuffer();
-        t.eq(backBuffer.style.left, tile.frame.style.left, "backBuffer tile has same left style as frame");
-        t.ok(backBuffer.firstChild === img, "image appended to backBuffer");
+        t.eq(backBuffer.style.left, left, "backBuffer tile has same left style as frame");
+        t.ok(backBuffer === img, "image returned as backBuffer");
         t.ok(tile.imgDiv == null, "image reference removed from tile");
         map.destroy();
     }
